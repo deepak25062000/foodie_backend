@@ -36,6 +36,15 @@ mongoose.connect(dbURL).then(() => {
 
 
 // ! Signin Sending to Server
+
+//? This is a backend route defined with Express.js. It handles a POST request to '/signin' and performs the following steps:
+//? It uses the Mongoose method findOne() to search for a User document in the database whose email property matches the email value provided in the request body.
+//? If a user is found, it compares the password property of the found User document with the password value provided in the request body.
+//? If the passwords match, it sends a response to the client with a JSON object containing a message property with the value 'signin successful'.
+//? If the passwords do not match, it sends a response to the client with a JSON object containing a message property with the value 'signin failed'.
+//? If no user is found with the given email address, it sends a response to the client with a JSON object containing a message property with the value 'no account seems to be matching with your email address'.
+
+
 app.post('/signin', async (req, res) => {
     User.findOne({ email: req.body.email }, (err, userData) => {
         if (userData) {
@@ -52,6 +61,16 @@ app.post('/signin', async (req, res) => {
 
 
 //! Signup to Server
+
+//? This is a backend route defined with Express.js. It handles a POST request to '/signup' and performs the following steps:
+
+//? It uses the Mongoose method findOne() to search for a User document in the database whose email property matches the email value provided in the request body.
+//? If a user is found, it sends a response to the client with a JSON object containing a message property with the value 'seems like you have already an account'.
+//? If no user is found with the given email address, it creates a new User object using the req.body parameters, and saves it to the database using the save() method.
+//? If an error occurs during the save operation, it sends a response to the client with the error message.
+//? If the save operation is successful, it sends a response to the client with a JSON object containing a message property with the value 'user registered successfully'.
+
+
 app.post('/signup', async (req, res) => {
     User.findOne({ email: req.body.email }, (err, UserData) => {
         if (UserData) {
@@ -77,6 +96,15 @@ app.post('/signup', async (req, res) => {
 
 
 // ! Post Details sending to Server
+
+//? This is a backend route defined with Express.js. It handles a GET request to '/post' and performs the following steps:
+
+//? It uses the Mongoose method find() to retrieve all Post documents from the database.
+//? It stores the retrieved documents in a variable named posts.
+//? It sends the posts variable as the response to the client with a status code of 200 (OK).
+//? If an error occurs during the retrieval operation, it catches the error and logs it to the console.
+
+
 app.get('/post', async (req, res) => {
     try {
         const posts = await Post.find()
@@ -88,6 +116,15 @@ app.get('/post', async (req, res) => {
 
 
 // ! Adding posts in POST/FOOD
+
+//? This is a backend route defined with Express.js. It handles a POST request to '/add-post' and performs the following steps:
+
+//? It creates a new Post object using the req.body parameters.
+//? It saves the new Post object to the database using the save() method.
+//? If the save operation is successful, it sends a response to the client with a JSON object containing a message property with the value 'post added successfully'.
+//? If an error occurs during the save operation, it catches the error and sends a response to the client with a JSON object containing a message property with the value 'Failed to add posts'.
+
+
 app.post('/add-post', async (req, res) => {
     let postdata = new Post({
         author: req.body.author,
@@ -106,6 +143,15 @@ app.post('/add-post', async (req, res) => {
 
 
 // !  User Details sending to Server
+
+//? This is a backend route defined with Express.js. It handles a GET request to '/user' and performs the following steps:
+
+//? It uses the Mongoose method find() to retrieve all User documents from the database.
+//? It stores the retrieved documents in a variable named user.
+//? It sends the user variable as the response to the client with a status code of 200 (OK).
+//? If an error occurs during the retrieval operation, it catches the error and logs it to the console.
+
+
 app.get('/user', async (req, res) => {
     try {
         const user = await User.find()
@@ -117,6 +163,16 @@ app.get('/user', async (req, res) => {
 
 
 // ! Seding SinglePost Details sending to Server
+
+//? This is a backend route defined with Express.js. It handles a GET request to '/post/:id', where :id is a parameter in the URL that represents the unique identifier of a Post document in the database. The route performs the following steps:
+
+//? It extracts the id parameter from the request using req.params.
+//? It uses the Mongoose method findById() to retrieve the Post document with the given id from the database.
+//? It stores the retrieved document in a variable named singlePost.
+//? It sends the singlePost variable as the response to the client with a status code of 200 (OK).
+//? If an error occurs during the retrieval operation, it catches the error and sends an error response to the client with a status code of 500 (Internal Server Error).
+
+
 app.get('/post/:id', async (req, res) => {
     const { id } = req.params
     try {
@@ -129,6 +185,14 @@ app.get('/post/:id', async (req, res) => {
 
 
 // ! Deleting particular  post
+
+//? This is a backend route defined with Express.js. It handles a DELETE request to '/post/:id', where :id is a parameter in the URL that represents the unique identifier of a Post document in the database. The route performs the following steps:
+
+//? It uses the Mongoose method deleteOne() to delete the Post document with the given _id from the database.
+//? It stores the result of the deletion operation in a variable named result.
+//? It sends the result variable as the response to the client.
+//? Note that the result variable contains an object with information about the deletion operation, such as the number of documents deleted.
+
 app.delete('/post/:id', async (req, res) => {
 
     const result = await Post.deleteOne({ _id: req.params.id })
@@ -137,6 +201,16 @@ app.delete('/post/:id', async (req, res) => {
 
 
 // ! Update particular post
+
+//? This is a backend route defined with Express.js. It handles a PUT request to '/post/:id', where :id is a parameter in the URL that represents the unique identifier of a Post document in the database. The route performs the following steps:
+
+//? It uses the Mongoose method findByIdAndUpdate() to find the Post document with the given _id and update it with the new data provided in the request body.
+//? It uses the $set operator to update only the fields specified in the request body, leaving the rest of the fields unchanged.
+//? It stores the result of the update operation in a variable named result.
+//? It sends the result variable as the response to the client.
+//? Note that the result variable contains an object with information about the update operation, such as the number of documents matched and modified.
+
+
 app.put('/post/:id', async (req, res) => {
     let result = await Post.findByIdAndUpdate(
         { _id: req.params.id },
@@ -149,6 +223,15 @@ app.put('/post/:id', async (req, res) => {
 
 
 // !to frefill the record in form
+
+//? This is a backend route defined with Express.js. It handles a GET request to '/post/:id', where :id is a parameter in the URL that represents the unique identifier of a Post document in the database. The route performs the following steps:
+
+//? It uses the Mongoose method findOne() to find the Post document with the given _id in the database.
+//? It stores the result of the query in a variable named result.
+//? It checks if result is not null, meaning that a Post document was found with the given _id.
+//? If result is not null, it sends the result variable as the response to the client.
+//? If result is null, it sends a message indicating that no record was found with the given _id.
+
 app.get('/post/:id', async (req, res) => {
     let result = await Post.findOne({ _id: req.params.id });
     if (result) {
@@ -160,6 +243,9 @@ app.get('/post/:id', async (req, res) => {
 
 
 // ! listining to Server
+
+// ?This is a method call to app.listen() that starts the server and listens for incoming requests on the specified PORT. When the server starts, it logs a message to the console indicating that it is listening on the specified PORT. This is helpful for debugging and verifying that the server is up and running. The PORT variable is likely defined earlier in the code, and it specifies the port number that the server should listen on.
+
 app.listen(PORT, () => {
     console.log(`listening to the port ${PORT}`);
 })
